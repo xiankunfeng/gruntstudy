@@ -1,0 +1,10 @@
+body{
+    background: url("/images/test.jpg") center no-repeat;
+    background-size: contain;
+}
+
+.beyound{
+    text-align: center;
+    padding: 20px 0px;
+    color: #f0ad4e;
+}

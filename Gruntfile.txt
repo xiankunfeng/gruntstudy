@@ -1,0 +1,162 @@
+/**
+ * Created by xkfeng on 2016/10/24.
+ */
+module.exports= function (grunt) {
+    grunt.initConfig({
+        clean:{
+            clean:{
+                files:[{
+                    src:['./dist']
+                }]
+            }
+        },
+        copy:{
+            htmlCopy:{
+                files:[{
+                    expand:true,
+                    cwd:"./src/app/html/",
+                    src:'*.html',
+                    dest:'./dist/app/html/'
+                }]
+            },
+            imagesCopy:{
+                files:[{
+                    expand:true,
+                    cwd:'./src/app/assets/images/',
+                    src:'*.*',
+                    dest:'./dist/app/assets/images/'
+
+                }]
+            }
+        },
+        cssmin:{
+            cssmin:{
+                files:[{
+                    expand:true,
+                    cwd:'./src/app/assets/css/',
+                    src:'*.css',
+                    dest:'./dist/app/assets/css/',
+                    ext:'.min.css',
+                    extDot:'first'
+                }
+                ]
+            }
+        },
+        uglify:{
+          jsgulify:{
+              files:[{
+                  expand:true,
+                  cwd:'./src/app/assets/js/',
+                  src:'*.js',
+                  dest:'./dist/app/assets/js/',
+                  ext:'.min.js',
+                  extDot:'first'
+              }]
+          }
+        },
+        rev:{
+            options:{
+                algorithm:'md5',
+                length:8
+            },
+            assets:{
+                files:[{
+                    src:["./dist/app/assets/**/*.*"]
+                }]
+            }
+
+        },
+        concat:{
+            cssconcat:{
+                files:[{
+                    "./dist/app/assets/css/all.min.css":"./dist/app/assets/css/*.css"
+                }]
+            },
+            jsconcat:{
+                files:[{
+                    "./dist/app/assets/js/all.min.js":"./dist/app/assets/**/*.js"
+                }]
+            }
+        },
+        filerev:{
+            cssfilerev:{
+                expand:true,
+                cwd:'./dist/app/assets/css/',
+                src:"*.min.css",
+                dest:'./dist/app/assets/css/filerev/',
+                ext:'.min.css',
+                extDot:'first'
+            },
+            jsfilerev:{
+                expand:true,
+                cwd:'./dist/app/assets/js/',
+                src:"*.min.js",
+                dest:'./dist/app/assets/js/filerev/',
+                ext:".min.js",
+                extDot:'first'
+            },
+            imgfilerev:{
+                expand:true,
+                cwd:'./dist/app/assets/images/',
+                src:"*.jpg",
+                dest:'./dist/app/assets/images/filerev/',
+                ext:".min.js",
+                extDot:'first',
+                nonull:true
+            }
+        },
+        useminPrepare:{
+            html:"./dist/app/html/index.html",
+            /*options:{
+                flow:{
+                    steps:{
+                        js:['uglify']
+                    },
+                    post:{
+                     js:[{
+                         name:'gulify',
+                         createConfig: function (context,block) {
+                           //  console.log(context,block);
+                             /!*var generated = context.options.generated;
+                             generated.options = {
+                                 foo: 'bar'
+                             };*!/
+                         }
+                     }]   
+                    }
+                }
+            }*/
+        },
+        usemin:{
+            //html:'./dist/app/html/index.html',
+            options:{
+                assetsDirs:['./dist/app/assets/images/'],
+                patterns:{
+                    html:[[/(\/images\/test\.jpg)/, 'replace image in css']]
+                }/*,
+                blockReplacements:{
+                    css: function (block) {
+                        //console.log(block);
+                        return '<link rel="stylesheet" href="' + block.dest + '">';
+                    }
+                }*/
+            },
+           /* html2:{
+                files:[{
+                    src:'./dist/app/html/!*.html',
+                    nonull:true
+                }]
+            },*/
+            js:'./dist/app/assets/js/*.min.js'
+        }
+    });
+    grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks("grunt-rev");
+    grunt.loadNpmTasks("grunt-filerev");
+    grunt.loadNpmTasks("grunt-usemin");
+    grunt.registerTask('default',["clean","copy","cssmin","uglify","rev",/*"filerev",*/"concat","useminPrepare","usemin"]);
+}
